@@ -1,0 +1,1 @@
+{"payload":{"schemaFormat":"application/vnd.apache.avro+yaml;version=1.9.0","schema":{"$ref":"./user-create.avsc"}},"name":"UserSignup","title":"User signup","summary":"Action to sign a user up.","description":"A longer description","tags":[{"name":"user"},{"name":"signup"},{"name":"register"}]}

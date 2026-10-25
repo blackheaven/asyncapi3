@@ -1,0 +1,1 @@
+{"tokenUrl":"https://example.com/api/oauth/token","availableScopes":{"read:pets":"read your pets","write:pets":"modify pets in your account"}}

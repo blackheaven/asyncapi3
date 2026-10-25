@@ -1,0 +1,1 @@
+{"userSignedUp":{"address":"user.signedup","messages":{"userSignedUp":{"$ref":"#/components/messages/userSignedUp"}}}}

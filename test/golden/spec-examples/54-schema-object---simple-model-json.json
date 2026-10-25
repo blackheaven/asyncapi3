@@ -1,0 +1,1 @@
+{"type":"object","required":["name"],"properties":{"address":{"$ref":"#/components/schemas/Address"},"age":{"type":"integer","minimum":0,"format":"int32"},"name":{"type":"string"}}}

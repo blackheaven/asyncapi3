@@ -1,0 +1,74 @@
+name: Haskell
+on:
+  - push
+  - pull_request
+
+permissions:
+  contents: read
+
+env:
+  project-cabal-file: asyncapi3.cabal
+
+jobs:
+  generate-matrix:
+    name: "Generate matrix from cabal"
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract the tested GHC versions
+        id: set-matrix
+        uses: kleidukos/get-tested@bbcf52a8d1b69bf8fdd671b490126d53f70fc9a7 # v0.1.10.0
+        with:
+          cabal-file: ${{ env.project-cabal-file }}
+          ubuntu-version: "latest"
+          version: 0.1.7.1
+  tests:
+    name: ${{ matrix.ghc }} on ${{ matrix.os }}
+    needs: generate-matrix
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Setup Haskell
+        uses: haskell-actions/setup@7fd2bb5ca789761088fbc831406b2910e47e56f1 # v2
+        with:
+          ghc-version: ${{ matrix.ghc }}
+          cabal-version: "3.10"
+
+      - name: Restore build and dependency cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        id: restore-build-cache
+        with:
+          key: build-${{ matrix.os }}-${{ matrix.ghc }}-${{ hashFiles(env.project-cabal-file) }}
+          restore-keys: |
+            build-${{ matrix.os }}-${{ matrix.ghc }}-
+          path: |
+            ~/.cabal/config
+            ~/.cabal/packages
+            ~/.cabal/store
+            dist-newstyle
+
+      - name: Build dependencies
+        run: |
+          cabal update
+          cabal v2-build all --enable-tests --enable-benchmarks --only-dependencies
+          cabal install hspec-discover
+
+      - name: Build
+        run: cabal v2-build all --enable-tests --enable-benchmarks
+
+      - name: Run test
+        run: cabal v2-test all --enable-tests --enable-benchmarks
+
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        if: always()
+        with:
+          key: ${{ steps.restore-build-cache.outputs.cache-primary-key }}
+          path: |
+            ~/.cabal/config
+            ~/.cabal/packages
+            ~/.cabal/store
+            dist-newstyle

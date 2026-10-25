@@ -1,0 +1,1 @@
+{"type":"object","required":["name"],"examples":[{"id":1,"name":"Puma"}],"properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"}}}

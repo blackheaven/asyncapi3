@@ -1,0 +1,1 @@
+{"type":"oauth2","flows":{"implicit":{"authorizationUrl":"https://example.com/api/oauth/dialog","availableScopes":{"read:pets":"read your pets","write:pets":"modify pets in your account"}}},"scopes":["write:pets"]}

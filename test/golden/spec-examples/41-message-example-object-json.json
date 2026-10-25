@@ -1,0 +1,1 @@
+{"headers":{"applicationInstanceId":"myInstanceId","correlationId":"my-correlation-id"},"payload":{"signup":{"someSignupKey":"someSignupValue"},"user":{"someUserKey":"someUserValue"}},"name":"SimpleSignup","summary":"A simple UserSignup example message"}
